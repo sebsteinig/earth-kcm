@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Map" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<head>
+    <meta charset="utf-8"/>
+    <title>kcm-earth :: interactive display of climate model simulations</title>
+    <meta itemprop="name"                                      content="earth"/>
+    <meta itemprop="description"     name="description"        content="interactive display of climate model simulations"/>
+    <meta itemprop="author"          name="author"             content="Sebastian Steinig"/>
+
+    <meta property="og:type"        content="website"/>
+    <meta property="og:title"       content="earth"/>
+    <meta property="og:url"         content="https://kcm-earth-app.herokuapp.com"/>
+    <meta property="og:image"       content="http://earth.nullschool.net/preview.jpg"/>
+
+
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="apple-touch-icon" sizes="120x120" href="/iphone-icon.png"/>
+    <link rel="apple-touch-icon" sizes="152x152" href="/ipad-icon.png"/>
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css"/>
+
+    <link rel="alternate" hreflang="x-default" href="https://kcm-earth-app.herokuapp.com"/>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116850306-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-116850306-1');
+</script>
+</head>
+<body scroll="no" style="overflow: hidden" data-lang="en">
+
+    <!--[if lte IE 8]><p id="warn">This site requires IE9 or newer.</p><![endif]-->
+
+
+    <div style="overflow: hidden;" id="display">
+        <svg id="map" class="fill-screen" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
+        <canvas id="animation" class="fill-screen"></canvas>
+        <canvas id="overlay" class="fill-screen"></canvas>
+        <svg id="foreground" class="fill-screen" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
+    </div>
+
+    <div id="details">
+        <p id="status"></p>
+        <div id="location">
+            <p>
+                <span id="location-coord"></span>
+                <span id="location-close" class="invisible text-button"> ✕ </span>
+            </p>
+            <p>
+                <span id="location-wind"></span>
+                <span id="location-wind-units" class="text-button"></span>
+            </p>
+            <p>
+                <span id="location-value"></span>
+                <span id="location-value-units" class="text-button"></span>
+            </p>
+        </div>
+
+        <p id="earth">
+            <span id="show-menu" class="text-button" title="menu">controls</span>
+            <span id="progress" class="invisible"></span>
+        </p>
+  
+        <div id="menu" class="invisible">
+            <p> <span
+<!--                 id="data-date" class="local"></span> <span -->
+<!--                 id="toggle-zone" class="text-button"></span> -->
+            </p>
+            <p class="CRET-mode">Source | <span id="data-center"></span></p>
+            <p class="PD-mode">Source | Kiel Climate Model in present-day configuration</span></p>
+
+            <p>Time Period | <span
+                class="text-button" id="PD-mode-enable">Present Day</span> – <span
+                class="text-button" id="CRET-mode-enable">Early Cretaceous</span>
+            </p>
+            <p class="CRET-mode">Drake Passage | <span
+                class="text-button" id="change-to-D0">closed</span> – <span
+                class="text-button" id="change-to-D200"> shallow</span> – <span
+                class="text-button" id="change-to-D1400">intermediate</span>
+            </p>
+            <p class="CRET-mode">Falkland Plateau | <span
+                class="text-button" id="change-to-FPG1">limited</span> – <span
+                class="text-button" id="change-to-FPG2"> intermediate</span> – <span
+                class="text-button" id="change-to-FPG3">deep</span>
+            </p>
+            <p class="CRET-mode">Walvis Ridge | <span
+                class="text-button" id="change-to-WRS">shallow</span> – <span
+                class="text-button" id="change-to-WRI"> intermediate</span>
+            </p>
+            <p class="CRET-mode">pCO<sub>2</sub> | <span
+                class="text-button" id="change-to-600ppm">600 ppm</span> – <span
+                class="text-button" id="change-to-1200ppm"> 1200 ppm</span>
+            </p>
+            <p>Mode | <span
+                class="text-button" id="wind-mode-enable">Atmosphere</span> – <span
+                class="text-button" id="ocean-mode-enable">Ocean</span>
+            </p>
+            <p class="wind-mode">Height | <span
+                class="surface text-button" id="surface-level" title="Surface">Sfc</span> – <span
+                class="surface text-button" id="isobaric-1000hPa">1000</span> – <span
+                class="surface text-button" id="isobaric-850hPa">850</span> – <span
+                class="surface text-button" id="isobaric-700hPa">700</span> – <span
+                class="surface text-button" id="isobaric-500hPa">500</span> – <span
+                class="surface text-button" id="isobaric-250hPa">250</span> – <span
+                class="surface text-button" id="isobaric-100hPa">100</span> – <span
+                class="surface text-button" id="isobaric-10hPa">10</span> hPa
+            </p>
+            <p class="wind-mode">Overlay | <span
+                class="text-button" id="overlay-wind" title="Wind Speed">Wind</span> – <span
+                class="text-button" id="overlay-temp" title="Temperature">Temp</span> – <span
+                class="text-button" id="overlay-sst" title="Sea Surface Temperature">SST</span> – <span
+                class="text-button" id="overlay-total_precipitation" title="Total Precipitation">PR</span> – <span
+                class="text-button" id="overlay-relative_humidity" title="Relative Humidity">RH</span> – <span
+                class="text-button" id="overlay-mean_sea_level_pressure" title="Mean Sea Level Pressure">MSLP</span> – <span
+                class="text-button" id="overlay-off">None</span
+            </p>
+            <p class="ocean-mode">Depth | <span
+                class="depth text-button" id="depthz-0m" title="Ocean Surface">Sfc</span> – <span
+                class="depth text-button" id="depthz-500m">500m</span> – <span
+                class="depth text-button" id="depthz-1000m">1000m</span> – <span
+                class="depth text-button" id="depthz-2000m">2000m</span> – <span
+                class="depth text-button" id="depthz-3000m">3000m</span>
+            </p>
+            <p class="ocean-mode">Overlay | <span
+                class="text-button" id="overlay-ocevel" title="Velocity Magnitude">Vel</span> – <span
+                class="text-button" id="overlay-ocetemp" title="Temperature">Temp</span> – <span
+                class="text-button" id="overlay-ocesal" title="Salinity">Sal</span> – <span
+                class="text-button" id="overlay-oceflep" title="EP flux from Atmosphere">EP</span> – <span
+                class="text-button" id="overlay-ocemld" title="Mixed Layer Depth">MLD</span> – <span
+                class="text-button" id="overlay-ocean-off">None</span
+            </p>
+            <p><span id="scale-label">Scale | </span><canvas id="scale"></canvas></p>
+            <p>Projection | <span
+                class="proj text-button" id="atlantis" title="Atlantis">A</span> – <span
+                class="proj text-button" id="azimuthal_equidistant" title="Azimuthal Equidistant">AE</span> – <span
+                class="proj text-button" id="conic_equidistant" title="Conic Equidistant">CE</span> – <span
+                class="proj text-button" id="equirectangular" title="Equirectangular">E</span> – <span
+                class="proj text-button" id="orthographic" title="Orthographic">O</span> – <span
+                class="proj text-button" id="robinson" title="Robinson">R</span> – <span
+                class="proj text-button" id="stereographic" title="Stereographic">S</span> – <span
+                class="proj text-button" id="waterman" title="Waterman Butterfly">WB</span> – <span
+                class="proj text-button" id="winkel3" title="Winkel Tripel">W3</span>
+            </p>
+            <!--<p>免責事項 | 正確な情報を提供するためのものではありません</p>-->
+            <p>
+                <a href="about.html" class="internal-link">info</a>
+                <a href="https://www.geomar.de/en/mitarbeiter/fb1/me/ssteinig/" style="text-decoration:none">contact</a>
+            <span
+                class="text-button" id="option-show-grid">Grid</span>
+            </p>
+        </div>
+    </div>
+<!--
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js" charset="utf-8"></script>
+
+-->
+
+    <script src="/libs/underscore.js/1.6.0/underscore.js" charset="utf-8"></script>
+    <script src="/libs/backbone.js/1.1.0/backbone.js" charset="utf-8"></script>
+    <script src="/libs/topojson/1.1.0/topojson.js" charset="utf-8"></script>
+    <script src="/libs/d3/3.3.10/d3.js" charset="utf-8"></script>
+
+    <script src="/libs/d3.geo/0.0.0/d3.geo.projection.v0.min.js" charset="utf-8"></script>
+    <script src="/libs/d3.geo/0.0.0/d3.geo.polyhedron.v0.min.js" charset="utf-8"></script>
+    <script src="/libs/when/2.6.0/when.js" charset="utf-8"></script>
+
+    <script src="/libs/earth/1.0.0/micro.js" charset="utf-8"></script>
+    <script src="/libs/earth/1.0.0/globes.js" charset="utf-8"></script>
+    <script src="/libs/earth/1.0.0/products.js" charset="utf-8"></script>
+    <script src="/libs/earth/1.0.0/earth.js" charset="utf-8"></script>
+
+</body>
+</html>

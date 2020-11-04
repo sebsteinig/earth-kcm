@@ -1,0 +1,30 @@
+{
+    "name": "kcm-earth",
+    "description": "Earth modified to display KCM data",
+    "version": "0.0.1",
+    "private": true,
+    "author": {
+        "name": "Sebastian Steinig (original by Cameron Beccario)",
+        "email": "ssteinig@geomar.de"
+    },
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "homepage": "https://github.com/timatrie/kcm_earth",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/timatrie/kcm_earth.git"
+    },
+    "engine": "node >= 0.10.21",
+    "dependencies": {
+        "when": "2.6.0",
+        "swig": "1.2.2",
+        "mkdirp": "0.3.5",
+        "express": "3.4.4"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-jshint": "~0.7.1"
+    }
+}
